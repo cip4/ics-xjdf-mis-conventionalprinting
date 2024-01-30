@@ -1,21 +1,23 @@
-# This is the basic workflow to build draft documentation
+# This is the basic workflow to build draft release documentation
+# Draft releases allow WG to 'tag' a particular state of the repository and equivalent
+# PDF. Useful if a document is to be discussed at an interop, but continues to be edited
 
-name: Snapshot Build
+name: Draft Release Build
 ## This section contains ALL variable specific for this project ##
 # The VERSION is the main release number i.e. 1.7 or 2.1
 env:
   BUILD_NAME:           ICS-XDF-MIS-CP
-  DOCUMENT_VERSION:     '2.1'
+  DOCUMENT_VERSION:     '2.2'
   DOCUMENT_COVER_TITLE: MIS to Conventional Printing ICS
   CONFIG_FILE:          Build\ICS_XJDF_MIS_ConventionalPrinting.ini
   CONFLUENCE_ID:        '1560313992'
-  CONFLUENCE_LABELS:    'ics-xdf-mis-conventionalprinting,ics-draft'
+  CONFLUENCE_LABELS:    'ics-xdf-mis-conventionalprinting,milestone'
   
   DOCUMENT_METADATA_COPYRIGHT:  'CIP4 Organization, all rights reserved'
   DOCUMENT_METADATA_TITLE:      'MIS to Conventional Printing ICS'
   DOCUMENT_METADATA_SUBJECT:    'MIS to Conventional Printing Interoperability Conformance Specification for XJDF'
   DOCUMENT_METADATA_AUTHOR:     'CIP4 Organization'
-  DOCUMENT_METADATA_KEYWORDS:   'Automation;CIM;CIP4;Graphic Arts;Graphics;Interface;Printing;Specification;Standard;Workflow;XML'
+  DOCUMENT_METADATA_KEYWORDS:   'Automation;CIM;CIP4;Graphic Arts;Graphics;Interface;Printing;Specification;Standard;Workflow;XJDF;XJMF;XML'
 
   BUILD_UTILITY_EXE: c:\actions-runner\_work\_tool\document-processing\document-processing.exe  
 
@@ -23,12 +25,9 @@ env:
 # Controls when the action will run
 on:
   push:
-    branches: [ master ]
-
-  workflow_dispatch:
-    inputs:
-      tags:
-        description: 'Manual Run'  
+    tags:
+      - 'Draft*'
+ 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -68,11 +67,11 @@ jobs:
         timeout-minutes: 30
         run: >
           python ..\builder\scripts\specbuilder.py $env:CONFIG_FILE
-          "$env:DOCUMENT_COVER_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "$env:DOCUMENT_COVER_TITLE $env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "$env:DOCUMENT_COVER_TITLE"
-          "$env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
-          "$env:DOCUMENT_METADATA_TITLE $env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER" 
-          "$env:DOCUMENT_VERSION Draft $((Get-Date).ToString('yyyyMMdd')) Build-$env:GITHUB_RUN_NUMBER"
+          "$env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
+          "$env:DOCUMENT_METADATA_TITLE $env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
+          "$env:DOCUMENT_VERSION $(${env:GITHUB_REF}.replace('refs/tags/',''))"
           "$((Get-Date).ToString('MMMM yyyy')) $env:DOCUMENT_METADATA_COPYRIGHT"
           "2000-$((Get-Date).ToString('yyyy'))"
           "Run-$env:GITHUB_RUN_NUMBER"
@@ -90,7 +89,13 @@ jobs:
         with:
           name: ${{ env.BUILD_NAME }}-artifact
           path: document/target/*.pdf
-          
+
+      # Generate full Confluence Labels List
+      - name: Generate Full Confluence Labels List
+        run: >
+          echo "FULL_CONFLUENCE_LABELS=${env:CONFLUENCE_LABELS},$(${env:GITHUB_REF}.replace('refs/tags/',''))" | 
+          Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+         
       # Upload to Confluence
       - name: Confluence Upload
         uses: cip4/action-confluence-upload@master
@@ -99,5 +104,5 @@ jobs:
           username: ${{ secrets.ATLASSIAN_USER }}
           password: ${{ secrets.ATLASSIAN_TOKEN }}
           contentId: ${{ env.CONFLUENCE_ID }}
-          label: ${{ env.CONFLUENCE_LABELS }}
+          label: ${{ env.FULL_CONFLUENCE_LABELS }}
           filePattern: 'document/target/*.pdf'
