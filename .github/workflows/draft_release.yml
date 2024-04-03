@@ -4,7 +4,7 @@
 
 name: Draft Release Build
 ## This section contains ALL variable specific for this project ##
-# The VERSION is the main release number i.e. 1.7 or 2.1
+# The VERSION is the main release number i.e. 1.7 or 2.2
 env:
   BUILD_NAME:           ICS-XDF-MIS-CP
   DOCUMENT_VERSION:     '2.2'

@@ -2,7 +2,7 @@
 
 name: Release Build
 ## This section contains ALL variable specific for this project ##
-# The VERSION is the main release number i.e. 1.7 or 2.1 (here for convenience but the git tag is actually used)
+# The VERSION is the main release number i.e. 1.7 or 2.2 (here for convenience but the git tag is actually used)
 env:
   BUILD_NAME:           ICS-XDF-MIS-CP
   #DOCUMENT_VERSION:     '2.2'

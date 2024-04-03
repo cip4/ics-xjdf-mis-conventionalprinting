@@ -2,10 +2,10 @@
 
 name: Snapshot Build
 ## This section contains ALL variable specific for this project ##
-# The VERSION is the main release number i.e. 1.7 or 2.1
+# The VERSION is the main release number i.e. 1.7 or 2.2
 env:
   BUILD_NAME:           ICS-XDF-MIS-CP
-  DOCUMENT_VERSION:     '2.1'
+  DOCUMENT_VERSION:     '2.2'
   DOCUMENT_COVER_TITLE: MIS to Conventional Printing ICS
   CONFIG_FILE:          Build\ICS_XJDF_MIS_ConventionalPrinting.ini
   CONFLUENCE_ID:        '1560313992'
