@@ -11,7 +11,7 @@ env:
   DOCUMENT_COVER_TITLE: MIS to Conventional Printing ICS
   CONFIG_FILE:          Build\ICS_XJDF_MIS_ConventionalPrinting.ini
   CONFLUENCE_ID:        '1560313992'
-  CONFLUENCE_LABELS:    'ics-xdf-mis-conventionalprinting,milestone'
+  CONFLUENCE_LABELS:    'ics-xjdf-mis-conventionalprinting,milestone'
   
   DOCUMENT_METADATA_COPYRIGHT:  'CIP4 Organization, all rights reserved'
   DOCUMENT_METADATA_TITLE:      'MIS to Conventional Printing ICS'
